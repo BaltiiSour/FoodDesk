@@ -1,0 +1,30 @@
+CREATE OR REPLACE EDITIONABLE PROCEDURE "ADMIN"."SP_LEE_USUARIO" (
+    IN_USER IN VARCHAR2,
+    IN_CLAVE IN VARCHAR2,
+    CUR_PROFILE OUT SYS_REFCURSOR  
+) AS
+
+/**************************************************************************************************************
+   NAME:       	SP_LEE_USUARIO
+   PURPOSE		LEE UN USUARIO
+
+   REVISIONS:
+   Ver          Date           Author                   Description
+   ---------    ----------     -------------------      -------------------------------------------------------
+   0.1          15/09/2021     Joel Padilla      	1. Lee los datos de un usuario
+
+
+***************************************************************************************************************/
+
+BEGIN
+
+    OPEN CUR_PROFILE FOR
+    SELECT P.NAME   
+    FROM PROFILES P
+    JOIN USERS U ON (P.PROFILE_ID = U.PROFILE_ID)
+    WHERE IN_USER = U.USUARIO;
+
+
+END SP_LEE_USUARIO;
+/
+

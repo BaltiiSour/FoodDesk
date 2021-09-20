@@ -1,0 +1,73 @@
+CREATE OR REPLACE EDITIONABLE PROCEDURE "ADMIN"."SP_CREA_USUARIO" (
+    IN_NOMBRE IN VARCHAR2,
+    IN_APELLIDO IN VARCHAR2,
+    IN_RUT IN VARCHAR2,
+    IN_MAIL IN VARCHAR2,
+    IN_ID_USER IN NUMBER,
+    IN_PROFILE IN NUMBER,
+    IN_USUARIO IN VARCHAR2,
+    IN_CLAVE IN VARCHAR2,
+
+ 
+    OUT_GLOSA OUT VARCHAR2,
+    OUT_ESTADO OUT NUMBER,
+    OUT_ID_SALIDA OUT NUMBER,
+    OUT_ID_SALIDA2 OUT NUMBER
+) AS
+
+/**************************************************************************************************************
+   NAME:       	SP_CREA_USUARIO
+   PURPOSE		CREA UN USUARIO
+
+   REVISIONS:
+   Ver          Date           Author                   Description
+   ---------    ----------     -------------------      -------------------------------------------------------
+   0.1          14/09/2021     Joel Padilla      	1. CREA UN REGISTRO EN LA TABLA Usario y Cliente
+
+
+***************************************************************************************************************/
+
+BEGIN
+    OUT_ESTADO := 0;
+    OUT_GLOSA := 'CREA UN USUARIO ejecutado exitosamente';
+
+
+	INSERT INTO USERS(
+        USER_ID,
+	    USUARIO,
+	    PASSWORD,
+        PROFILE_ID
+   )
+    VALUES 
+    (
+      USERS_USER_ID_SEQ.NEXTVAL,
+      IN_USUARIO,
+      IN_CLAVE,
+      2
+    ) RETURNING USER_ID INTO OUT_ID_SALIDA2;
+
+
+	INSERT INTO CLIENTS(
+        RUT,
+	NOMBRE,
+	APELLIDO,
+        MAIL,
+	USER_ID,
+        PROFILE_ID
+   )
+    VALUES (
+      IN_RUT,
+      IN_NOMBRE,
+      IN_APELLIDO,
+      IN_MAIL,
+      OUT_ID_SALIDA2,
+      2
+    ) RETURNING RUT INTO OUT_ID_SALIDA;
+
+    EXCEPTION
+        WHEN OTHERS THEN
+            OUT_ESTADO := -1;
+
+END SP_CREA_USUARIO;
+/
+
